@@ -1,9 +1,18 @@
 #! /system/bin/sh
+SKIPUNZIP=0
 
-ADBD_APEX="/apex/com.android.adbd/"
+ADBD_APEX="/apex/com.android.adbd"
 
 install() {
 
+    if [ "$ARCH" == "arm64" ] || [ "$ARCH" == "x64" ]; then
+        ui_print "- Device Arch: $ARCH"
+        mv $MODPATH/common/$ARCH $MODPATH/system
+        rm -rf $MODPATH/common
+    else
+        abort "! Unsupport Arch: $ARCH"
+    fi
+    
     SYSTEM_ADBD_PATH="$ADBD_APEX/bin/adbd"
     SYSTEM_ADBD_PATH_REAL="$SYSTEM_ADBD_PATH.real"
 
@@ -19,8 +28,10 @@ install() {
     fi
 
     ui_print "set permissions.."
-    chmod +x $MOD_ADBD_PATH
+    chmod 0755 $MOD_ADBD_PATH $MOD_ADBD_PATH_REAL
+    chown 0:2000 $MOD_ADBD_PATH $MOD_ADBD_PATH_REAL
     chcon --reference=$SYSTEM_ADBD_PATH $MOD_ADBD_PATH $MOD_ADBD_PATH_REAL
+    set_perm $MODPATH/system/lib64/libadb_root_helper.so 0 0 0644 u:object_r:system_lib_file:s0
 }
 
 if [ -d "$ADBD_APEX" ]; then
