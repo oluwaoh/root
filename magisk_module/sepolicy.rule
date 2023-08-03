@@ -1,3 +1,9 @@
 permissive { su }
 permissive { adbd }
 allow init adbd process2 nosuid_transition
+allow adbd properties_device dir *
+allow adbd properties_device file *
+allow adbd proc_stat dir *
+allow adbd proc_stat file *
+allow adbd adbd_exec dir *
+allow adbd adbd_exec file *

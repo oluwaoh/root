@@ -1,6 +1,6 @@
 #! /system/bin/sh
 
-ADBD_APEX="/apex/com.android.adbd/"
+ADBD_APEX="/apex/com.android.adbd"
 
 install() {
 
